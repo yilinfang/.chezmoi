@@ -1,3 +1,6 @@
+# Use source paths relative to `~`
+# For example, to ignore `~/.config/nvim/init.vim`, use `.config/nvim/init.vim`
+
 README.md
 scripts/
 

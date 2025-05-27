@@ -1,0 +1,14 @@
+README.md
+scripts/
+
+.gitignore
+*bak*
+tmp/
+
+# MacOS
+.DS_Store
+
+# Start of ~/.config/github-copilot
+.config/github-copilot/*
+!.config/github-copilot/apps.json
+# End of ~/.config/github-copilot

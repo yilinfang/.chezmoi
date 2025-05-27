@@ -1,8 +1,8 @@
-[init]
-	defaultBranch = main
 [user]
 	name = Yilin Fang
 	email = qzfyl98@outlook.com
+[init]
+	defaultBranch = main
 [alias]
 	a = add
 	c = checkout

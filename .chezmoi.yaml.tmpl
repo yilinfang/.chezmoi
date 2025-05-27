@@ -1,0 +1,18 @@
+sourceDir: "~/.chezmoi"
+
+diff:
+  pager: "delta"
+
+merge:
+  command: "nvim"
+  args:
+    - "--clean"
+    - "-d"
+    - {{ printf "%q" "{{ .Destination }}" }}
+    - {{ printf "%q" "{{ .Source }}" }}
+    - {{ printf "%q" "{{ .Target }}" }}
+
+encryption: "age"
+age:
+  identity:: "~/.age/key.txt.age"
+  recipients: "age1ls77t0p2vdfqvxp3ex64upschcvk8yegnr0lucw2z84hl42yyswq227cqf"

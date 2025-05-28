@@ -13,6 +13,11 @@ if test (uname) = Darwin
     fish_add_path -g /opt/homebrew/bin
 end
 
+# Add $HOME/.chezmoi/bin to PATH if it exists
+if test -d "$HOME/.chezmoi/bin"
+    fish_add_path "$HOME/.chezmoi/bin"
+end
+
 # Starship
 if command -v starship >/dev/null
     starship init fish | source

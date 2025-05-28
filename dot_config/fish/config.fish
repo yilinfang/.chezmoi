@@ -11,6 +11,12 @@ end
 if test (uname) = Darwin
     # Homebrew
     fish_add_path -g /opt/homebrew/bin
+
+    # HACK: Update terminfo database with Homebrew installed ncurses
+    set -l ncurses_terminfo (brew --prefix ncurses)/share/terminfo
+    if not contains $ncurses_terminfo $TERMINFO_DIRS
+        set -gx TERMINFO_DIRS $ncurses_terminfo $TERMINFO_DIRS
+    end
 end
 
 # Add $HOME/.chezmoi/bin to PATH if it exists
@@ -50,19 +56,6 @@ function update_terminal_info
     # Run the command with the provided server argument
     infocmp -x | ssh $argv -- tic -x -
 end
-
-# >>> conda initialize >>>
-# !! Contents within this block are managed by 'conda init' !!
-if test -f /Users/leo/miniconda3/bin/conda
-    eval /Users/leo/miniconda3/bin/conda "shell.fish" hook $argv | source
-else
-    if test -f "/Users/leo/miniconda3/etc/fish/conf.d/conda.fish"
-        . "/Users/leo/miniconda3/etc/fish/conf.d/conda.fish"
-    else
-        set -x PATH /Users/leo/miniconda3/bin $PATH
-    end
-end
-# <<< conda initialize <<<
 
 # pde-starter configuration
 if test -f /Users/leo/.pde/init.fish

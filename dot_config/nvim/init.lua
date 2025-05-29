@@ -140,6 +140,13 @@ vim.api.nvim_create_autocmd('FileType', {
   end,
 })
 
+-- HACK: Toggle spell checking in the current buffer
+vim.keymap.set('n', '<leader>ts', function()
+  vim.opt_local.spell = not vim.opt_local.spell:get()
+  local status = vim.opt_local.spell:get() and 'ON' or 'OFF'
+  print('Spell check: ' .. status)
+end, { desc = '[T]oggle [S]pell Check' })
+
 -- [[ Install `lazy.nvim` plugin manager ]]
 local lazypath = vim.fn.stdpath 'data' .. '/lazy/lazy.nvim'
 if not (vim.uv or vim.loop).fs_stat(lazypath) then

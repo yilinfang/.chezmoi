@@ -822,7 +822,7 @@ require('lazy').setup({
   { -- HACK: copilot.lua
     'zbirenbaum/copilot.lua',
     cmd = 'Copilot',
-    event = 'InsertEnter',
+    event = { 'BufReadPost', 'BufNewFile', 'BufWritePost' },
     build = ':Copilot auth',
     opts = {
       suggestion = {

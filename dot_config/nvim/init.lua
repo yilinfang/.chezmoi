@@ -324,6 +324,8 @@ require('lazy').setup({
       'mason-org/mason-lspconfig.nvim',
       'WhoIsSethDaniel/mason-tool-installer.nvim',
 
+      'b0o/schemastore.nvim', -- HACK: schemastore.nvim
+
       -- Useful status updates for LSP.
       {
         'j-hui/fidget.nvim',
@@ -508,11 +510,31 @@ require('lazy').setup({
         -- Marksman
         ['marksman'] = {},
         -- Jsonls
-        ['jsonls'] = {},
+        ['jsonls'] = {
+          settings = {
+            json = {
+              schemas = require('schemastore').json.schemas(),
+              validate = { enable = true },
+            },
+          },
+        },
         -- Taplo
         ['taplo'] = {},
         -- Yamlls
-        ['yamlls'] = {},
+        ['yamlls'] = {
+          settings = {
+            yaml = {
+              schemaStore = {
+                -- You must disable built-in schemaStore support if you want to use
+                -- this plugin and its advanced options like `ignore`.
+                enable = false,
+                -- Avoid TypeError: Cannot read properties of undefined (reading 'length')
+                url = '',
+              },
+              schemas = require('schemastore').yaml.schemas(),
+            },
+          },
+        },
       }
       -- Ensure the servers and tools above are installed
       local ensure_installed = vim.tbl_keys(servers or {})
@@ -522,6 +544,7 @@ require('lazy').setup({
         'shellcheck', -- Required by bashls
         'prettierd',
         'prettier',
+        'markdownlint-cli2',
       })
       -- HACK: Setup LSP servers with neovim 0.11+ API
       for server, config in pairs(servers) do
@@ -768,6 +791,32 @@ require('lazy').setup({
       },
       indent = { enable = true, disable = { 'ruby' } },
     },
+  },
+
+  { -- HACK: nvim-lint for lintting
+    'mfussenegger/nvim-lint',
+    event = { unpack(LazyFile) }, -- HACK: Set the event of nvim-lint to LazyFile
+    config = function()
+      local lint = require 'lint'
+      lint.linters_by_ft = {
+        markdown = { 'markdownlint-cli2' },
+      }
+
+      -- Create autocommand which carries out the actual linting
+      -- on the specified events.
+      local lint_augroup = vim.api.nvim_create_augroup('lint', { clear = true })
+      vim.api.nvim_create_autocmd({ 'BufEnter', 'BufWritePost', 'InsertLeave' }, {
+        group = lint_augroup,
+        callback = function()
+          -- Only run the linter in buffers that you can modify in order to
+          -- avoid superfluous noise, notably within the handy LSP pop-ups that
+          -- describe the hovered symbol using Markdown.
+          if vim.bo.modifiable then
+            lint.try_lint()
+          end
+        end,
+      })
+    end,
   },
 
   { -- HACK: Other snacks.nvim modules

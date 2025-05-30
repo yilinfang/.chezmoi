@@ -1,3 +1,9 @@
+{{- $tmuxVersion := output "tmux" "-V" | regexFind `[0-9]+\.[0-9]+` -}}
+{{- $majorMinor := $tmuxVersion | splitList "." -}}
+{{- $major := index $majorMinor 0 | int -}}
+{{- $minor := index $majorMinor 1 | int -}}
+{{- $version := printf "%d%02d" $major $minor | int -}}
+
 # Enable 256 colors
 set -g default-terminal "tmux-256color"
 set-option -ga terminal-overrides ",*256col*:Tc"
@@ -38,16 +44,14 @@ bind -r C-l resize-pane -R 5
 bind-key -n Home send Escape "OH"
 bind-key -n End send Escape "OF"
 
-# Undercurl
-set -as terminal-overrides ',*:Smulx=\E[4::%p1%dm' # undercurl support
-set -as terminal-overrides ',*:Setulc=\E[58::2::%p1%{65536}%/%d::%p1%{256}%/%{255}%&%d::%p1%{255}%&%d%;m' # underscore colours - needs tmux-3.0
-
 # Allow clipboard access with OSC 52
 set -s set-clipboard on
 
-set -g allow-passthrough on # Allow passthrough - needs tmux-3.3
-set -ga update-environment TERM
-set -ga update-environment TERM_PROGRAM
+# Undercurl
+set -as terminal-overrides ',*:Smulx=\E[4::%p1%dm' # undercurl support
+{{- if ge $version 300 }}
+set -as terminal-overrides ',*:Setulc=\E[58::2::%p1%{65536}%/%d::%p1%{256}%/%{255}%&%d::%p1%{255}%&%d%;m' # underscore colours - needs tmux-3.0
+{{- end }}
 
 # Theme
 ## solarized-osaka

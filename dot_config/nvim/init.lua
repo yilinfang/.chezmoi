@@ -1,5 +1,6 @@
 -- Yilin Fang's personal Neovim configuration
 -- Based on kickstart.nvim
+-- Also inspired a lot by AstroNvim and LazyVim
 -- Copyright (c) 2025 Yilin Fang
 
 -- [[ Global options ]]
@@ -52,6 +53,10 @@ vim.o.undofile = true
 vim.o.ignorecase = true
 vim.o.smartcase = true
 
+-- HACK: Use rg for grep
+vim.o.grepformat = '%f:%l:%c:%m'
+vim.o.grepprg = 'rg --vimgrep'
+
 -- Keep signcolumn on by default
 vim.o.signcolumn = 'yes'
 
@@ -91,6 +96,13 @@ vim.o.smoothscroll = true
 vim.o.foldmethod = 'expr'
 vim.o.foldexpr = 'nvim_treesitter#foldexpr()'
 vim.o.foldlevel = 99
+
+-- HACK: Indent settings
+vim.o.expandtab = true -- Use spaces instead of tabs
+vim.o.shiftround = true -- Round indent
+vim.o.shiftwidth = 2 -- Size of an indent
+vim.o.smartindent = true -- Smart indenting on new lines
+vim.o.tabstop = 2 -- Number of spaces a <Tab> counts for
 
 -- [[ Basic Keymaps ]]
 -- Clear highlights on search when pressing <Esc> in normal mode

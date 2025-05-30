@@ -161,10 +161,18 @@ end
 local rtp = vim.opt.rtp
 rtp:prepend(lazypath)
 
+-- HACK: Define event LazyFile to BufReadPost, BufNewFile and BufWritePost
+local LazyFile = {
+  'BufReadPost',
+  'BufNewFile',
+  'BufWritePost',
+}
+
 -- [[ Configure and install plugins ]]
 require('lazy').setup({
   { -- Detect tabstop and shiftwidth automatically
     'NMAC427/guess-indent.nvim', -- HACK: guess-indent.nvim
+    event = { 'BufReadPost', 'BufNewFile' }, -- HACK: Set the event of guess-indent.nvim to BufReadPost, BufNewFile
     config = function()
       require('guess-indent').setup {}
       vim.keymap.set('n', '<leader>g', function()
@@ -175,7 +183,7 @@ require('lazy').setup({
 
   { -- Useful plugin to show you pending keybinds.
     'folke/which-key.nvim',
-    event = 'VimEnter', -- Sets the loading event to 'VimEnter'
+    event = 'VeryLazy', -- HACK: Set the event of which-key.nvim to VeryLazy
     opts = {
       -- delay between pressing a key and opening which-key (milliseconds)
       -- this setting is independent of vim.opt.timeoutlen
@@ -307,6 +315,7 @@ require('lazy').setup({
   {
     -- Main LSP Configuration
     'neovim/nvim-lspconfig',
+    event = { unpack(LazyFile) }, -- HACK: Set the event of nvim-lspconfig to LazyFile
     dependencies = {
       -- Automatically install LSPs and related tools to stdpath for Neovim
       -- Mason must be loaded before its dependents so we need to set it up here.
@@ -318,6 +327,7 @@ require('lazy').setup({
       -- Useful status updates for LSP.
       {
         'j-hui/fidget.nvim',
+        event = { unpack(LazyFile) }, -- HACK: Set the event of fidget.nvim to LazyFile
         opts = {
           notification = {
             window = {
@@ -578,7 +588,7 @@ require('lazy').setup({
 
   { -- Autocompletion
     'saghen/blink.cmp',
-    event = 'VimEnter',
+    event = 'InsertEnter', -- HACK: Set the event of blink.cmp to InsertEnter
     version = '1.*',
     dependencies = {
       -- Snippet Engine
@@ -667,7 +677,7 @@ require('lazy').setup({
   -- HACK: todo-comments
   {
     'folke/todo-comments.nvim',
-    event = 'VimEnter',
+    event = { unpack(LazyFile) }, -- HACK: Set the event of todo-comments to LazyFile
     dependencies = { 'nvim-lua/plenary.nvim' },
     config = function()
       require('todo-comments').setup { signs = false }
@@ -723,6 +733,7 @@ require('lazy').setup({
 
   { -- Highlight, edit, and navigate code
     'nvim-treesitter/nvim-treesitter',
+    event = { unpack(LazyFile), 'VeryLazy' }, -- HACK: Set the event of nvim-treesitter to LazyFile and VeryLazy
     build = ':TSUpdate',
     main = 'nvim-treesitter.configs', -- Sets main module to use for opts
     -- [[ Configure Treesitter ]] See `:help nvim-treesitter`
@@ -822,7 +833,7 @@ require('lazy').setup({
   { -- HACK: copilot.lua
     'zbirenbaum/copilot.lua',
     cmd = 'Copilot',
-    event = { 'BufReadPost', 'BufNewFile', 'BufWritePost' },
+    event = { unpack(LazyFile) }, -- HACK: Set the event of copilot.lua to LazyFile
     build = ':Copilot auth',
     opts = {
       suggestion = {
@@ -851,6 +862,7 @@ require('lazy').setup({
 
   { -- HACK: aerial.nvim
     'stevearc/aerial.nvim',
+    event = { unpack(LazyFile) }, -- HACK: Set the event of aerial.nvim to LazyFile
     -- Optional dependencies
     dependencies = {
       'nvim-treesitter/nvim-treesitter',

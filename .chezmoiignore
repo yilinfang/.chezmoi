@@ -2,14 +2,15 @@
 # For example, to ignore `~/.config/nvim/init.vim`, use `.config/nvim/init.vim`
 
 README.md
+.gitignore
 scripts/
 
-.gitignore
-*bak*
-tmp/
+**/.git/
+**/*bak*
+**/tmp/
 
 # MacOS
-.DS_Store
+**/.DS_Store
 
 # Start of ~/.config/github-copilot
 .config/github-copilot/*

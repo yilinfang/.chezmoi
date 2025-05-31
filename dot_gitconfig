@@ -1,17 +1,8 @@
-{{- $gitVersion := output "git" "--version" | regexFind `[0-9]+\.[0-9]+\.[0-9]+` -}}
-{{- $versionParts := $gitVersion | splitList "." -}}
-{{- $major := index $versionParts 0 | int -}}
-{{- $minor := index $versionParts 1 | int -}}
-{{- $patch := index $versionParts 2 | int -}}
-{{- $version := printf "%d%02d%02d" $major $minor $patch | int -}}
-
 [user]
 	name = Yilin Fang
 	email = qzfyl98@outlook.com
-
 [init]
 	defaultBranch = main
-
 [alias]
 	a = add
 	c = checkout
@@ -21,24 +12,24 @@
 	ci = commit
 	cm = commit -m
 	st = status
+	mt = mergetool
 	pl = pull
 	ph = push
 	dl = -c diff.external=difft log -p --ext-diff
 	ds = -c diff.external=difft show --ext-diff
 	dft = -c diff.external=difft diff
-
 [core]
 	pager = delta
-
 [interactive]
 	diffFilter = delta --color-only
-
 [delta]
 	navigate = true
-
 [merge]
-{{- if ge $version 23500 }}
 	conflictStyle = zdiff3
-{{- else }}
-	conflictStyle = diff3
-{{- end }}
+	tool = nvim
+[mergetool]
+	prompt = false
+	keepBackup = false
+[mergetool "nvim"]
+	cmd = nvim -d \"$LOCAL\" \"$MERGED\" \"$REMOTE\"
+	trustExitCode = false

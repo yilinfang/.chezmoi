@@ -8,6 +8,11 @@
 vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 
+-- HACK: Exclude patterns for telescope
+vim.g.exlude_pattern = {
+  '.git/',
+}
+
 -- [[ Setting options ]]
 -- Enable linenumbers
 vim.o.number = true
@@ -294,98 +299,125 @@ require('lazy').setup({
     },
   },
 
-  { -- HACK: Snacks.picker
-    'folke/snacks.nvim',
-    lazy = false,
+  -- HACK: Telescope.nvim
+  { -- Fuzzy Finder (files, lsp, etc)
+    'nvim-telescope/telescope.nvim',
+    cmd = { 'Telescope' }, -- HACK: Set the command of telescope.nvim to Telescope
+    version = false, -- HACK: Disable version check to use the latest version
     dependencies = {
-      'nvim-tree/nvim-web-devicons',
+      'nvim-lua/plenary.nvim',
+      { -- If encountering errors, see telescope-fzf-native README for installation instructions
+        'nvim-telescope/telescope-fzf-native.nvim',
+
+        -- `build` is used to run some command when the plugin is installed/updated.
+        -- This is only run then, not every time Neovim starts up.
+        build = 'make',
+
+        -- `cond` is a condition used to determine whether this plugin should be
+        -- installed and loaded.
+        cond = function()
+          return vim.fn.executable 'make' == 1
+        end,
+      },
+
+      -- Useful for getting pretty icons, but requires a Nerd Font.
+      { 'nvim-tree/nvim-web-devicons', enabled = true },
     },
-    opts = {
-      picker = { enabled = true },
-      image = {
-        enabled = false, -- NOTE: Disable snacks.image
-        formats = {}, -- HACK: Disable image preview for other modules like picker
-      },
-    },
-    keys = {
-      {
-        '<leader>sh',
-        function()
-          Snacks.picker.help()
-        end,
-        desc = '[S]earch [H]elp',
-      },
-      {
-        '<leader>sk',
-        function()
-          Snacks.picker.keymaps()
-        end,
-        desc = '[S]earch [K]eymaps',
-      },
-      {
-        '<leader>sf',
-        function()
-          Snacks.picker.files()
-        end,
-        desc = '[S]earch [F]iles',
-      },
-      {
-        '<leader>ss',
-        function()
-          Snacks.picker()
-        end,
-        desc = '[S]earch [S]elect Picker',
-      },
-      {
-        '<leader>sw',
-        function()
-          Snacks.picker.grep_word()
-        end,
-        desc = '[S]earch current [W]ord',
-      },
-      {
-        '<leader>sg',
-        function()
-          Snacks.picker.grep()
-        end,
-        desc = '[S]earch by [G]rep',
-      },
-      {
-        '<leader>sd',
-        function()
-          Snacks.picker.diagnostics()
-        end,
-        desc = '[S]earch [D]iagnostics',
-      },
-      {
-        '<leader>sr',
-        function()
-          Snacks.picker.resume()
-        end,
-        desc = '[S]earch [R]esume',
-      },
-      {
-        '<leader>s.',
-        function()
-          Snacks.picker.recent()
-        end,
-        desc = '[S]earch Recent Files ("." for repeat)',
-      },
-      {
-        '<leader><leader>',
-        function()
-          Snacks.picker.buffers()
-        end,
-        desc = '[ ] Find existing buffers',
-      },
-      {
-        '<leader>/',
-        function()
-          Snacks.picker.lines()
-        end,
-        desc = '[/] Fuzzily search in current buffer',
-      },
-    },
+    config = function()
+      -- [[ Configure Telescope ]]
+      -- See `:help telescope` and `:help telescope.setup()`
+
+      -- HACK: Custom vimgrep arguments
+      local custom_vimgrep_arguments = {
+        'rg',
+        '--color=never',
+        '--no-heading',
+        '--with-filename',
+        '--line-number',
+        '--column',
+        '--smart-case',
+        '--hidden', -- NOTE: Include hidden files
+      }
+      for _, pattern in ipairs(vim.g.exlude_pattern or {}) do
+        vim.list_extend(custom_vimgrep_arguments, { '--glob', '!' .. pattern })
+      end
+      require('telescope').setup {
+        defaults = {
+          vimgrep_arguments = custom_vimgrep_arguments,
+        },
+      }
+
+      -- Enable Telescope extensions if they are installed
+      pcall(require('telescope').load_extension, 'fzf')
+
+      -- See `:help telescope.builtin`
+      local builtin = require 'telescope.builtin'
+      vim.keymap.set('n', '<leader>sh', builtin.help_tags, { desc = '[S]earch [H]elp' })
+      vim.keymap.set('n', '<leader>sk', builtin.keymaps, { desc = '[S]earch [K]eymaps' })
+      vim.keymap.set('n', '<leader>ss', builtin.builtin, { desc = '[S]earch [S]elect Telescope' })
+      vim.keymap.set('n', '<leader>sw', builtin.grep_string, { desc = '[S]earch Current [W]ord' })
+      vim.keymap.set('n', '<leader>sg', builtin.live_grep, { desc = '[S]earch by [G]rep' })
+      vim.keymap.set('n', '<leader>sd', builtin.diagnostics, { desc = '[S]earch [D]iagnostics' })
+      vim.keymap.set('n', '<leader>sr', builtin.resume, { desc = '[S]earch [R]esume' })
+      vim.keymap.set('n', '<leader>s.', builtin.oldfiles, { desc = '[S]earch Recent Files ("." for repeat)' })
+      vim.keymap.set('n', '<leader><leader>', builtin.buffers, { desc = '[ ] Find Existing Buffers' })
+
+      -- It's also possible to pass additional configuration options.
+      --  See `:help telescope.builtin.live_grep()` for information about particular keys
+      vim.keymap.set('n', '<leader>s/', function()
+        builtin.live_grep {
+          grep_open_files = true,
+          prompt_title = 'Live Grep in Open Files',
+        }
+      end, { desc = '[S]earch [/] in Open Files' })
+
+      -- Shortcut for searching your Neovim configuration files
+      vim.keymap.set('n', '<leader>sn', function()
+        builtin.find_files { cwd = vim.fn.stdpath 'config' }
+      end, { desc = '[S]earch [N]eovim [F]iles' })
+
+      -- HACK: Custom keymap for telescope.nvim
+      vim.keymap.set('n', '<leader>/', builtin.current_buffer_fuzzy_find, { desc = '[/] Fuzzily Search in Current Buffer' })
+
+      vim.keymap.set('n', '<leader>sG', function()
+        builtin.live_grep {
+          additional_args = { '--follow', '--no-ignore-vcs' },
+          prompt_title = 'Live Grep in All Files (including ignored files)',
+        }
+      end, { desc = '[S]earch By [G]rep in All files' })
+
+      -- HACK: Custom find files command
+      local get_custom_find_command = function()
+        local fd_binary = vim.fn.executable 'fd' == 1 and 'fd' or 'fdfind'
+        local custom_find_command = {
+          fd_binary,
+          '--type',
+          'f',
+          '--color',
+          'never',
+          '--hidden', -- NOTE: Include hidden files
+        }
+        for _, pattern in ipairs(vim.g.exlude_pattern or {}) do
+          vim.list_extend(custom_find_command, { '--exclude', pattern })
+        end
+        return custom_find_command
+      end
+
+      vim.keymap.set('n', '<leader>sf', function()
+        builtin.find_files {
+          find_command = get_custom_find_command(),
+        }
+      end, { desc = '[S]earch [F]iles' })
+
+      vim.keymap.set('n', '<leader>sF', function()
+        builtin.find_files {
+          find_command = function()
+            return vim.list_extend(get_custom_find_command(), { '--follow', '--no-ignore-vcs' })
+          end,
+          prompt_title = '[S]earch All [F]iles (including ignored files)',
+        }
+      end, { desc = '[S]earch All [F]iles' })
+    end,
   },
 
   -- LSP Plugins
@@ -455,35 +487,34 @@ require('lazy').setup({
           -- or a suggestion from your LSP for this to activate.
           map('gra', vim.lsp.buf.code_action, '[G]oto Code [A]ction', { 'n', 'x' })
 
-          -- HACK: Replace telescope with snacks.picker
-          map('grr', function()
-            Snacks.picker.lsp_references()
-          end, '[G]oto [R]eferences')
+          -- Find references for the word under your cursor.
+          map('grr', require('telescope.builtin').lsp_references, '[G]oto [R]eferences')
 
-          map('gri', function()
-            Snacks.picker.lsp_implementations()
-          end, '[G]oto [I]mplementation')
+          -- Jump to the implementation of the word under your cursor.
+          --  Useful when your language has ways of declaring types without an actual implementation.
+          map('gri', require('telescope.builtin').lsp_implementations, '[G]oto [I]mplementation')
 
-          map('grd', function()
-            Snacks.picker.lsp_definitions()
-          end, '[G]oto [D]efinition')
+          -- Jump to the definition of the word under your cursor.
+          --  This is where a variable was first declared, or where a function is defined, etc.
+          --  To jump back, press <C-t>.
+          map('grd', require('telescope.builtin').lsp_definitions, '[G]oto [D]efinition')
 
           -- WARN: This is not Goto Definition, this is Goto Declaration.
           --  For example, in C this would take you to the header.
           map('grD', vim.lsp.buf.declaration, '[G]oto [D]eclaration')
 
-          -- HACK: Replace telescope with snacks.picker
-          map('gO', function()
-            Snacks.picker.lsp_symbols { filter = { default = true } }
-          end, 'Open Document Symbols')
+          -- Fuzzy find all the symbols in your current document.
+          --  Symbols are things like variables, functions, types, etc.
+          map('gO', require('telescope.builtin').lsp_document_symbols, 'Open Document Symbols')
 
-          map('gW', function()
-            Snacks.picker.lsp_workspace_symbols { filter = { default = true } }
-          end, 'Open Workspace Symbols')
+          -- Fuzzy find all the symbols in your current workspace.
+          --  Similar to document symbols, except searches over your entire project.
+          map('gW', require('telescope.builtin').lsp_dynamic_workspace_symbols, 'Open Workspace Symbols')
 
-          map('grt', function()
-            Snacks.picker.lsp_type_definitions()
-          end, '[G]oto [T]ype Definition')
+          -- Jump to the type of the word under your cursor.
+          --  Useful when you're not sure what type a variable is and you want to see
+          --  the definition of its *type*, not where it was *defined*.
+          map('grt', require('telescope.builtin').lsp_type_definitions, '[G]oto [T]ype Definition')
 
           -- This function resolves a difference between neovim nightly (version 0.11) and stable (version 0.10)
           ---@param client vim.lsp.Client
@@ -815,9 +846,15 @@ require('lazy').setup({
     config = function()
       require('todo-comments').setup { signs = false }
       -- Set keymaps
-      vim.keymap.set('n', '<leader>st', function()
-        Snacks.picker.todo_comments()
-      end, { desc = '[S]earch [T]odos' })
+      vim.keymap.set('n', ']t', function()
+        require('todo-comments').jump_next()
+      end, { desc = 'Next Todo Comment' })
+
+      vim.keymap.set('n', '[t', function()
+        require('todo-comments').jump_prev()
+      end, { desc = 'Previous Todo Comment' })
+
+      vim.keymap.set('n', '<leader>st', '<cmd>TodoTelescope<CR>', { desc = '[S]earch [T]odos' })
 
       -- HACK: Toggle todo-comments
       local is_highlight_active = true -- Set the initial state to enabled
@@ -957,7 +994,7 @@ require('lazy').setup({
     end,
   },
 
-  { -- HACK: Other snacks.nvim modules
+  { -- HACK: snacks.nvim
     'folke/snacks.nvim',
     priority = 1000,
     lazy = false,
@@ -1064,9 +1101,7 @@ require('lazy').setup({
     config = function(_, opts)
       require('aerial').setup(opts)
       vim.keymap.set('n', '<leader>ta', '<cmd>AerialToggle right<CR>', { desc = '[T]oggle [A]erial' })
-      vim.keymap.set('n', '<leader>sa', function()
-        require('aerial').snacks_picker()
-      end, { desc = '[S]earch [A]erial Symbol' })
+      vim.keymap.set('n', '<leader>sa', '<cmd>Telescope aerial<CR>', { desc = '[S]earch [A]erial Symbol' })
     end,
   },
 }, {

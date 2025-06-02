@@ -187,12 +187,8 @@ end
 local rtp = vim.opt.rtp
 rtp:prepend(lazypath)
 
--- HACK: Define event LazyFile to BufReadPost, BufNewFile and BufWritePost
-local LazyFile = {
-  'BufReadPost',
-  'BufNewFile',
-  'BufWritePost',
-}
+-- HACK: Define event LazyFile
+local LazyFile = { 'BufReadPost', 'BufNewFile', 'BufWritePre' }
 
 -- [[ Configure and install plugins ]]
 require('lazy').setup({
@@ -888,7 +884,8 @@ require('lazy').setup({
 
   { -- Highlight, edit, and navigate code
     'nvim-treesitter/nvim-treesitter',
-    event = { unpack(LazyFile), 'VeryLazy' }, -- HACK: Set the event of nvim-treesitter to LazyFile and VeryLazy
+    branch = 'master', -- HACK: Set the branch to master
+    lazy = false, -- HACK: Load treesitter immediately
     build = ':TSUpdate',
     main = 'nvim-treesitter.configs', -- Sets main module to use for opts
     -- [[ Configure Treesitter ]] See `:help nvim-treesitter`

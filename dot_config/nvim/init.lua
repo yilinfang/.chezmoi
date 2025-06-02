@@ -132,6 +132,13 @@ vim.keymap.set({ 'n', 'v' }, '<M-S-a>', '<Esc>ggVG', { desc = 'Select all text i
 -- HACK: Map <M-S-y> to copy the selected text to the system clipboard "+
 vim.keymap.set({ 'v' }, '<M-S-y>', '"+y"', { desc = 'Yank selected text to the system clipboard' })
 
+-- HACK: Toggle spell checking in the current buffer
+vim.keymap.set('n', '<leader>ts', function()
+  vim.opt_local.spell = not vim.opt_local.spell:get()
+  local status = vim.opt_local.spell:get() and 'ON' or 'OFF'
+  print('Spell check: ' .. status)
+end, { desc = '[T]oggle [S]pell Check' })
+
 -- [[ Basic Autocommands ]]
 -- Highlight when yanking (copying) text
 vim.api.nvim_create_autocmd('TextYankPost', {
@@ -152,12 +159,14 @@ vim.api.nvim_create_autocmd('FileType', {
   end,
 })
 
--- HACK: Toggle spell checking in the current buffer
-vim.keymap.set('n', '<leader>ts', function()
-  vim.opt_local.spell = not vim.opt_local.spell:get()
-  local status = vim.opt_local.spell:get() and 'ON' or 'OFF'
-  print('Spell check: ' .. status)
-end, { desc = '[T]oggle [S]pell Check' })
+-- HACK: Automatically resize splits when the window is resize
+--  It will resize all splits to have equal height and width,
+--  but not preserve the current size of splits.
+vim.api.nvim_create_autocmd('VimResized', {
+  desc = 'Automatically resize splits when the window is resized',
+  group = vim.api.nvim_create_augroup('kickstart-resize-splits', { clear = true }),
+  command = 'windo wincmd = ',
+})
 
 -- [[ Install `lazy.nvim` plugin manager ]]
 local lazypath = vim.fn.stdpath 'data' .. '/lazy/lazy.nvim'

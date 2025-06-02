@@ -187,12 +187,8 @@ end
 local rtp = vim.opt.rtp
 rtp:prepend(lazypath)
 
--- HACK: Define event LazyFile to BufReadPost, BufNewFile and BufWritePost
-local LazyFile = {
-  'BufReadPost',
-  'BufNewFile',
-  'BufWritePost',
-}
+-- HACK: Define event LazyFile
+local LazyFile = { 'BufReadPost', 'BufNewFile', 'BufWritePost' }
 
 -- [[ Configure and install plugins ]]
 require('lazy').setup({
@@ -437,7 +433,7 @@ require('lazy').setup({
   {
     -- Main LSP Configuration
     'neovim/nvim-lspconfig',
-    event = { unpack(LazyFile) }, -- HACK: Set the event of nvim-lspconfig to LazyFile
+    event = { unpack(LazyFile), 'VeryLazy' }, -- HACK: Set the event of nvim-lspconfig to LazyFile
     dependencies = {
       -- Automatically install LSPs and related tools to stdpath for Neovim
       -- Mason must be loaded before its dependents so we need to set it up here.
@@ -888,7 +884,19 @@ require('lazy').setup({
 
   { -- Highlight, edit, and navigate code
     'nvim-treesitter/nvim-treesitter',
+    branch = 'master', -- HACK: Set the branch to master
     event = { unpack(LazyFile), 'VeryLazy' }, -- HACK: Set the event of nvim-treesitter to LazyFile and VeryLazy
+    lazy = vim.fn.argc(-1) == 0, -- HACK: load treesitter immediately when opening a file from the cmdline
+    init = function(plugin) -- HACK: Add nvim-treesitter queries to the rtp
+      -- PERF: add nvim-treesitter queries to the rtp and it's custom query predicates early
+      -- This is needed because a bunch of plugins no longer `require("nvim-treesitter")`, which
+      -- no longer trigger the **nvim-treeitter** module to be loaded in time.
+      -- Luckily, the only thins that those plugins need are the custom queries, which we make available
+      -- during startup.
+      -- CODE FROM LazyVim (thanks folke!) https://github.com/LazyVim/LazyVim/commit/1e1b68d633d4bd4faa912ba5f49ab6b8601dc0c9
+      require('lazy.core.loader').add_to_rtp(plugin)
+      pcall(require, 'nvim-treesitter.query_predicates')
+    end,
     build = ':TSUpdate',
     main = 'nvim-treesitter.configs', -- Sets main module to use for opts
     -- [[ Configure Treesitter ]] See `:help nvim-treesitter`

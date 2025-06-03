@@ -703,13 +703,22 @@ require('lazy').setup({
     event = { 'BufWritePre' },
     cmd = { 'ConformInfo' },
     keys = {
+      -- HACK: Customized keymap
       {
         '<leader>f',
         function()
           require('conform').format { async = true, lsp_format = 'fallback' }
         end,
-        mode = '',
+        mode = 'n',
         desc = '[F]ormat buffer',
+      },
+      {
+        '<leader>F',
+        function()
+          require('conform').format { formatters = { 'injected' }, timeout_ms = 3000 }
+        end,
+        mode = { 'n', 'v' },
+        desc = '[F]ormat Injected Langs',
       },
     },
     opts = {

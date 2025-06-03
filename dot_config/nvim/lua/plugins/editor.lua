@@ -8,15 +8,20 @@ return {
       require("todo-comments").setup(opts)
       -- HACK: Toggle todo-comments
       local is_highlight_active = true -- Set the initial state to enabled
-      vim.keymap.set("n", "<leader>tt", function()
-        if is_highlight_active then
-          require("todo-comments").disable()
-          is_highlight_active = false
-        else
-          require("todo-comments").enable()
-          is_highlight_active = true
-        end
-      end, { desc = "[T]oggle [T]odo Comments Highlight" })
+      Snacks.toggle({
+        name = "Todo Comments",
+        get = function()
+          return is_highlight_active
+        end,
+        set = function(value)
+          is_highlight_active = value
+          if is_highlight_active then
+            require("todo-comments").enable()
+          else
+            require("todo-comments").disable()
+          end
+        end,
+      }):map("<leader>ut")
     end,
   },
 

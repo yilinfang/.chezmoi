@@ -433,7 +433,7 @@ require('lazy').setup({
   {
     -- Main LSP Configuration
     'neovim/nvim-lspconfig',
-    event = { unpack(LazyFile), 'VeryLazy' }, -- HACK: Set the event of nvim-lspconfig to LazyFile and VeryLazy (temporary fix)
+    event = { 'BufReadPre', 'BufNewFile' }, -- HACK: Set the event of nvim-lspconfig to BufReadPre and BufNewFile
     dependencies = {
       -- Automatically install LSPs and related tools to stdpath for Neovim
       -- Mason must be loaded before its dependents so we need to set it up here.
@@ -894,8 +894,7 @@ require('lazy').setup({
   { -- Highlight, edit, and navigate code
     'nvim-treesitter/nvim-treesitter',
     branch = 'master', -- HACK: Set the branch to master
-    event = { unpack(LazyFile), 'VeryLazy' }, -- HACK: Set the event of nvim-treesitter to LazyFile and VeryLazy
-    lazy = vim.fn.argc(-1) == 0, -- HACK: load treesitter immediately when opening a file from the cmdline
+    lazy = false, -- HACK: Load nvim-treesitter immediately
     init = function(plugin) -- HACK: Add nvim-treesitter queries to the rtp
       -- PERF: add nvim-treesitter queries to the rtp and it's custom query predicates early
       -- This is needed because a bunch of plugins no longer `require("nvim-treesitter")`, which

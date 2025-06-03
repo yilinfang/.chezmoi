@@ -433,7 +433,7 @@ require('lazy').setup({
   {
     -- Main LSP Configuration
     'neovim/nvim-lspconfig',
-    event = { unpack(LazyFile), 'VeryLazy' }, -- HACK: Set the event of nvim-lspconfig to LazyFile
+    event = { unpack(LazyFile), 'VeryLazy' }, -- HACK: Set the event of nvim-lspconfig to LazyFile and VeryLazy (temporary fix)
     dependencies = {
       -- Automatically install LSPs and related tools to stdpath for Neovim
       -- Mason must be loaded before its dependents so we need to set it up here.
@@ -1021,6 +1021,10 @@ require('lazy').setup({
   ╚═══╝  ╚═╝╚═╝     ╚═╝╚═╝      ╚═════╝ ╚═╝  ╚═╝ ╚═════╝  ╚═════╝  ╚═════╝ ╚═════╝ 
           ]],
         },
+      },
+      image = { -- HACK: Forcefully disable image preview in snacks.nvim.
+        enable = false,
+        formats = {},
       },
       indent = { enable = true },
       quickfile = { enabled = true, exlucde = { 'latex' } },

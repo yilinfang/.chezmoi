@@ -15,7 +15,7 @@ The binaries will be installed to `~/.chezmoi/bin/` by default (you can set it b
 2. Install the dotfiles.
 
 ```bash
-rm -rf ~/.config/chezmoi # Remove existing chezmoi config
+rm -rf ~/.config/chezmoi      # Remove existing chezmoi config
 rm -rf ~/.local/share/chezmoi # Remove existing chezmoi data (optional)
 chezmoi init --apply yilinfang -S ~/.chezmoi/dotfiles
 ```

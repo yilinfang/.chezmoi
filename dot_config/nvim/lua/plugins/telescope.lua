@@ -1,7 +1,7 @@
 -- Fuzzy Finder (files, lsp, etc)
 return {
   'nvim-telescope/telescope.nvim',
-  command = 'Telescope', -- HACK: Load command Telescope
+  command = 'Telescope', -- HACK: Load on command Telescope
   version = false, -- HACK: Disable version check to use the latest version
   dependencies = {
     'nvim-lua/plenary.nvim',

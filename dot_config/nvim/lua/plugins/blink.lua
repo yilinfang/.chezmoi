@@ -36,6 +36,7 @@ return {
     'Saghen/blink.cmp',
     event = { 'InsertEnter', 'CmdlineEnter' }, -- HACK: Load on insert mode or command line enter
     version = '1.*',
+    opts_extend = { 'sources.default', 'cmdline.sources', 'term.sources' }, -- HACK: make sources for blink.cmp extendable
     --- @module 'blink.cmp'
     --- @type blink.cmp.Config
     opts = {
@@ -55,7 +56,7 @@ return {
       },
 
       sources = {
-        default = { 'lsp', 'path', 'snippets', 'lazydev' },
+        default = { 'lsp', 'path', 'snippets', 'buffer' }, -- HACK: Default sources for blink.cmp
       },
 
       -- Blink.cmp includes an optional, recommended rust fuzzy matcher,

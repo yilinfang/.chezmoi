@@ -7,7 +7,7 @@ Personal dotfiles managed with [chezmoi](https://www.chezmoi.io/).
 1. Install chezmoi and age. The installation script can be found [here](scripts/install.sh).
 
 ```bash
-sh -c "$(curl -fsSL https://raw.githubusercontent.com/yilinfang/dotfiles/master/scripts/install.sh)" | sh
+sh -c "$(curl -fsSL https://raw.githubusercontent.com/yilinfang/dotfiles/main/scripts/install.sh)" | sh
 ```
 
 The binaries will be installed to `~/.chezmoi/bin/` by default (you can set it by setting `$INSTALL_TARGET_DIR`). Please add this to your `PATH` if it is not already.

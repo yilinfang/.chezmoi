@@ -2,6 +2,7 @@ return {
   {
     'WhoIsSethDaniel/mason-tool-installer.nvim',
     lazy = true,
+    optional = true,
     opts = function(_, opts)
       local list_helper = require 'utils.list_helper'
       opts.ensure_installed = list_helper.extend_unique(opts.ensure_installed or {}, {
@@ -14,6 +15,7 @@ return {
 
   {
     'neovim/nvim-lspconfig',
+    optional = true,
     opts = function()
       -- Configure Marksman for Markdown
       vim.lsp.config('marksman', {})
@@ -22,6 +24,7 @@ return {
 
   {
     'stevearc/conform.nvim',
+    optional = true,
     opts = {
       formatters_by_ft = {
         markdown = { 'prettier' },

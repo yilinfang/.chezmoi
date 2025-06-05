@@ -10,12 +10,15 @@ return {
         { path = '${3rd}/luv/library', words = { 'vim%.uv' } },
       },
     },
-    specs = { -- HACK: Add `lazydev` to `blink` sources
+    specs = {
+      -- HACK: Add `lazydev` to `blink` sources
+      --  CODE FROM: https://github.com/AstroNvim/AstroNvim/blob/5adafa02ab066326f911160dd6c73d758407fe46/lua/astronvim/plugins/lazydev.lua#L17
       {
         'Saghen/blink.cmp',
         optional = true,
         opts = {
           sources = {
+            default = { 'lazydev' },
             providers = {
               lazydev = { module = 'lazydev.integrations.blink', score_offset = 100 },
             },
@@ -28,6 +31,7 @@ return {
   {
     'WhoIsSethDaniel/mason-tool-installer.nvim',
     lazy = true,
+    optional = true,
     opts = function(_, opts)
       local list_helper = require 'utils.list_helper'
       opts.ensure_installed = list_helper.extend_unique(opts.ensure_installed or {}, {
@@ -39,6 +43,7 @@ return {
 
   {
     'neovim/nvim-lspconfig',
+    optional = true,
     opts = function(_, opts)
       -- Configure Lua LSP for Neovim config, runtime and plugins
       vim.lsp.config('lua_ls', {
@@ -60,6 +65,7 @@ return {
 
   {
     'stevearc/conform.nvim',
+    optional = true,
     opts = {
       formatters_by_ft = {
         lua = { 'stylua' },

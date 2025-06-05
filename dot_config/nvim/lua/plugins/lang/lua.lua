@@ -10,6 +10,19 @@ return {
         { path = '${3rd}/luv/library', words = { 'vim%.uv' } },
       },
     },
+    specs = { -- HACK: Add `lazydev` to `blink` sources
+      {
+        'Saghen/blink.cmp',
+        optional = true,
+        opts = {
+          sources = {
+            providers = {
+              lazydev = { module = 'lazydev.integrations.blink', score_offset = 100 },
+            },
+          },
+        },
+      },
+    },
   },
 
   {

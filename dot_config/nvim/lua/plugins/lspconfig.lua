@@ -158,7 +158,8 @@ return {
       },
     }
 
-    require('mason-tool-installer').setup {}
+    require('mason-tool-installer').setup {} -- HACK: Set up mason-tool-installer to install LSPs and related tools
+
     require('mason-lspconfig').setup {
       ensure_installed = {}, -- explicitly set to an empty table (Kickstart populates installs via mason-tool-installer)
       automatic_installation = false,

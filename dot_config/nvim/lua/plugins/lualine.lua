@@ -37,7 +37,7 @@ return {
         lualine_y = { 'progress' },
         lualine_z = { 'location' },
       },
-      extensions = { 'lazy', 'mason', 'aerial', 'quickfix' },
+      extensions = { 'lazy', 'mason', 'quickfix', 'aerial' },
     }
   end,
 }

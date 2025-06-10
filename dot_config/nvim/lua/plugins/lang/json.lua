@@ -1,33 +1,33 @@
 return {
   {
-    'b0o/SchemaStore.nvim',
+    "b0o/SchemaStore.nvim",
     lazy = true,
     version = false, -- last release is way too old
   },
 
   {
-    'WhoIsSethDaniel/mason-tool-installer.nvim',
+    "WhoIsSethDaniel/mason-tool-installer.nvim",
     lazy = true,
     optional = true,
     opts = function(_, opts)
-      local list_helper = require 'utils.list_helper'
+      local list_helper = require "utils.list_helper"
       opts.ensure_installed = list_helper.extend_unique(opts.ensure_installed or {}, {
-        'jsonls',
-        'prettier',
+        "jsonls",
+        "prettier",
       })
     end,
   },
 
   {
-    'neovim/nvim-lspconfig',
+    "neovim/nvim-lspconfig",
     optional = true,
     opts = function()
       local capabilities = vim.lsp.protocol.make_client_capabilities()
       capabilities.textDocument.completion.completionItem.snippetSupport = true
-      vim.lsp.config('jsonls', {
+      vim.lsp.config("jsonls", {
         settings = {
           json = {
-            schemas = require('schemastore').json.schemas(),
+            schemas = require("schemastore").json.schemas(),
             validate = { enable = true },
           },
         },
@@ -37,11 +37,11 @@ return {
   },
 
   {
-    'stevearc/conform.nvim',
+    "stevearc/conform.nvim",
     optional = true,
     opts = {
       formatters_by_ft = {
-        json = { 'prettier' },
+        json = { "prettier" },
       },
     },
   },

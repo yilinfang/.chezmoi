@@ -1,28 +1,28 @@
 return {
   {
-    'b0o/SchemaStore.nvim',
+    "b0o/SchemaStore.nvim",
     lazy = true,
     version = false, -- last release is way too old
   },
 
   {
-    'WhoIsSethDaniel/mason-tool-installer.nvim',
+    "WhoIsSethDaniel/mason-tool-installer.nvim",
     lazy = true,
     optional = true,
     opts = function(_, opts)
-      local list_helper = require 'utils.list_helper'
+      local list_helper = require "utils.list_helper"
       opts.ensure_installed = list_helper.extend_unique(opts.ensure_installed or {}, {
-        'yamlls',
-        'prettier',
+        "yamlls",
+        "prettier",
       })
     end,
   },
 
   {
-    'neovim/nvim-lspconfig',
+    "neovim/nvim-lspconfig",
     optional = true,
     opts = function()
-      vim.lsp.config('yamlls', {
+      vim.lsp.config("yamlls", {
         settings = {
           yaml = {
             schemaStore = {
@@ -30,9 +30,9 @@ return {
               -- this plugin and its advanced options like `ignore`.
               enable = false,
               -- Avoid TypeError: Cannot read properties of undefined (reading 'length')
-              url = '',
+              url = "",
             },
-            schemas = require('schemastore').yaml.schemas(),
+            schemas = require("schemastore").yaml.schemas(),
           },
         },
       })
@@ -40,11 +40,11 @@ return {
   },
 
   {
-    'stevearc/conform.nvim',
+    "stevearc/conform.nvim",
     optional = true,
     opts = {
       formatters_by_ft = {
-        yaml = { 'prettier' },
+        yaml = { "prettier" },
       },
     },
   },

@@ -1,33 +1,31 @@
 return {
   {
-    'WhoIsSethDaniel/mason-tool-installer.nvim',
+    "WhoIsSethDaniel/mason-tool-installer.nvim",
     lazy = true,
     optional = true,
     opts = function(_, opts)
-      local list_helper = require 'utils.list_helper'
+      local list_helper = require "utils.list_helper"
       opts.ensure_installed = list_helper.extend_unique(opts.ensure_installed or {}, {
-        'bashls',
-        'shfmt',
-        'shellcheck',
+        "bashls",
+        "shfmt",
+        "shellcheck",
       })
     end,
   },
 
   {
-    'neovim/nvim-lspconfig',
+    "neovim/nvim-lspconfig",
     optional = true,
-    opts = function()
-      vim.lsp.config('bashls', {})
-    end,
+    opts = function() vim.lsp.config("bashls", {}) end,
   },
 
   {
-    'stevearc/conform.nvim',
+    "stevearc/conform.nvim",
     optional = true,
     opts = {
       formatters_by_ft = {
-        fish = { 'fish_indent' },
-        sh = { 'shfmt' },
+        fish = { "fish_indent" },
+        sh = { "shfmt" },
       },
     },
   },

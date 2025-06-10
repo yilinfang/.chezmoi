@@ -5,9 +5,9 @@ local M = {}
 
 -- Define LazyFile event
 M.LazyFile = {
-  'BufReadPost',
-  'BufNewFile',
-  'BufWritePost',
+  "BufReadPost",
+  "BufNewFile",
+  "BufWritePost",
 }
 
 return M

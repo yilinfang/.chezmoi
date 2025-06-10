@@ -1,25 +1,21 @@
 -- Autoformat
 return {
-  'stevearc/conform.nvim',
-  event = { 'BufWritePre' },
-  cmd = { 'ConformInfo' },
+  "stevearc/conform.nvim",
+  event = { "BufWritePre" },
+  cmd = { "ConformInfo" },
   keys = {
     -- HACK: Customized keymap
     {
-      '<leader>f',
-      function()
-        require('conform').format { async = true, lsp_format = 'fallback' }
-      end,
-      mode = 'n',
-      desc = '[F]ormat buffer',
+      "<leader>f",
+      function() require("conform").format { async = true, lsp_format = "fallback" } end,
+      mode = "n",
+      desc = "[F]ormat buffer",
     },
     {
-      '<leader>F',
-      function()
-        require('conform').format { formatters = { 'injected' }, timeout_ms = 3000 }
-      end,
-      mode = { 'n', 'v' },
-      desc = '[F]ormat Injected Langs',
+      "<leader>F",
+      function() require("conform").format { formatters = { "injected" }, timeout_ms = 3000 } end,
+      mode = { "n", "v" },
+      desc = "[F]ormat Injected Langs",
     },
   },
   opts = {
@@ -34,7 +30,7 @@ return {
       else
         return {
           timeout_ms = 500,
-          lsp_format = 'fallback',
+          lsp_format = "fallback",
         }
       end
     end,

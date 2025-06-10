@@ -1,12 +1,12 @@
 -- [[ Global options ]]
 -- Set <space> as the leader key
-vim.g.mapleader = ' '
-vim.g.maplocalleader = ' '
+vim.g.mapleader = " "
+vim.g.maplocalleader = " "
 
 -- HACK: Exclude patterns for telescope
-vim.g.exclude_pattern = {
-  '.git/',
-}
+-- vim.g.exclude_pattern = {
+--   '.git/',
+-- }
 
 -- [[ Setting options ]]
 -- Enable linenumbers
@@ -16,7 +16,7 @@ vim.o.number = true
 vim.o.relativenumber = true
 
 -- Enable mouse mode, can be useful for resizing splits for example!
-vim.o.mouse = 'a'
+vim.o.mouse = "a"
 
 -- Don't show the mode, since it's already in the status line
 vim.o.showmode = false
@@ -25,19 +25,19 @@ vim.o.showmode = false
 --  Disable paste from system clipboard
 if vim.env.SSH_TTY then
   vim.g.clipboard = {
-    name = 'Customized OSC 52',
+    name = "Customized OSC 52",
     copy = {
-      ['+'] = require('vim.ui.clipboard.osc52').copy '+',
-      ['*'] = require('vim.ui.clipboard.osc52').copy '*',
+      ["+"] = require("vim.ui.clipboard.osc52").copy "+",
+      ["*"] = require("vim.ui.clipboard.osc52").copy "*",
     },
     paste = {
-      ['+'] = function()
-        local content = vim.fn.getreg ''
-        return vim.split(content, '\n')
+      ["+"] = function()
+        local content = vim.fn.getreg ""
+        return vim.split(content, "\n")
       end,
-      ['*'] = function()
-        local content = vim.fn.getreg ''
-        return vim.split(content, '\n')
+      ["*"] = function()
+        local content = vim.fn.getreg ""
+        return vim.split(content, "\n")
       end,
     },
   }
@@ -54,11 +54,11 @@ vim.o.ignorecase = true
 vim.o.smartcase = true
 
 -- HACK: Use rg for grep
-vim.o.grepformat = '%f:%l:%c:%m'
-vim.o.grepprg = 'rg --vimgrep'
+vim.o.grepformat = "%f:%l:%c:%m"
+vim.o.grepprg = "rg --vimgrep"
 
 -- Keep signcolumn on by default
-vim.o.signcolumn = 'yes'
+vim.o.signcolumn = "yes"
 
 -- Decrease update time
 vim.o.updatetime = 250
@@ -72,10 +72,10 @@ vim.o.splitbelow = true
 
 -- Sets how neovim will display certain whitespace characters in the editor.
 vim.o.list = true
-vim.opt.listchars = { tab = '» ', trail = '·', nbsp = '␣' }
+vim.opt.listchars = { tab = "» ", trail = "·", nbsp = "␣" }
 
 -- Preview substitutions live, as you type!
-vim.o.inccommand = 'split'
+vim.o.inccommand = "split"
 
 -- Show which line your cursor is on
 vim.o.cursorline = true
@@ -93,8 +93,8 @@ vim.o.linebreak = true
 
 -- HACK: Folding
 vim.o.smoothscroll = true
-vim.o.foldmethod = 'expr'
-vim.o.foldexpr = 'nvim_treesitter#foldexpr()'
+vim.o.foldmethod = "expr"
+vim.o.foldexpr = "nvim_treesitter#foldexpr()"
 vim.o.foldlevel = 99
 
 -- HACK: Indent settings

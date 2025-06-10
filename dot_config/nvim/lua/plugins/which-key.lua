@@ -1,8 +1,8 @@
 -- Useful plugin to show you pending keybinds.
 return {
-  'folke/which-key.nvim',
-  dependencies = { 'nvim-tree/nvim-web-devicons' }, -- HACK: nvim-web-devicons for which-key.nvim
-  event = 'VeryLazy', -- HACK: Set the event of which-key.nvim to VeryLazy
+  "folke/which-key.nvim",
+  dependencies = { "nvim-tree/nvim-web-devicons" }, -- HACK: nvim-web-devicons for which-key.nvim
+  event = "VeryLazy", -- HACK: Set the event of which-key.nvim to VeryLazy
   opts = {
     -- delay between pressing a key and opening which-key (milliseconds)
     -- this setting is independent of vim.opt.timeoutlen
@@ -17,12 +17,12 @@ return {
 
     -- Document existing key chains
     spec = {
-      { '<leader>s', group = '[S]earch' },
-      { '<leader>t', group = '[T]oggle' },
-      { '<leader>h', group = 'Git [H]unk', mode = { 'n', 'v' } },
+      { "<leader>s", group = "[S]earch" },
+      { "<leader>t", group = "[T]oggle" },
+      { "<leader>h", group = "Git [H]unk", mode = { "n", "v" } },
     },
 
     -- HACK: Change which-key peset
-    preset = 'helix',
+    preset = "helix",
   },
 }

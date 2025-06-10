@@ -7,9 +7,7 @@ local M = {}
 --- @param list table List of items that may contain duplicates
 --- @return table Deduplicated list with original order preserved
 function M.ensure_unique(list)
-  if not list or type(list) ~= 'table' then
-    return {}
-  end
+  if not list or type(list) ~= "table" then return {} end
 
   local seen = {}
   local result = {}
@@ -35,9 +33,7 @@ function M.extend_unique(existing, new_items)
   local combined = vim.list_extend({}, existing) -- Create a copy
 
   for _, item in ipairs(new_items) do
-    if not vim.tbl_contains(combined, item) then
-      table.insert(combined, item)
-    end
+    if not vim.tbl_contains(combined, item) then table.insert(combined, item) end
   end
 
   return combined

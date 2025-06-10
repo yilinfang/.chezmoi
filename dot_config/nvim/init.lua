@@ -4,7 +4,7 @@
 -- Copyright (c) 2025 Yilin Fang
 
 -- Load configurations
-require 'config.options'
-require 'config.keymaps'
-require 'config.autocmds'
-require 'config.lazy'
+require "config.options"
+require "config.keymaps"
+require "config.autocmds"
+require "config.lazy"

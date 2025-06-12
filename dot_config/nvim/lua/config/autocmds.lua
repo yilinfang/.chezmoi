@@ -6,12 +6,15 @@ vim.api.nvim_create_autocmd("TextYankPost", {
   callback = function() vim.hl.on_yank() end,
 })
 
--- HACK: Check for spell in text filetypes
+-- HACK: Check for spell and wrap in text filetypes
 vim.api.nvim_create_autocmd("FileType", {
   desc = "Check for spell in text filetypes",
   group = vim.api.nvim_create_augroup("kickstart-spell-check", { clear = true }),
   pattern = { "text", "plaintex", "typst", "gitcommit", "markdown" },
-  callback = function() vim.opt_local.spell = true end,
+  callback = function()
+    vim.opt_local.spell = true
+    vim.opt_local.wrap = true
+  end,
 })
 
 -- HACK: Automatically resize splits when the window is resize

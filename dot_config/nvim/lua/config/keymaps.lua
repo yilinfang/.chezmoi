@@ -32,3 +32,10 @@ vim.keymap.set("n", "<leader>ts", function()
   local status = vim.opt_local.spell:get() and "ON" or "OFF"
   print("Spell check: " .. status)
 end, { desc = "[T]oggle [S]pell Check" })
+
+-- HACK: Toggle wrap in the current buffer
+vim.keymap.set("n", "<leader>tw", function()
+  vim.opt_local.wrap = not vim.opt_local.wrap:get()
+  local status = vim.opt_local.wrap:get() and "ON" or "OFF"
+  print("Wrap: " .. status)
+end, { desc = "[T]oggle [W]rap" })
